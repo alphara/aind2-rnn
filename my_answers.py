@@ -3,6 +3,7 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
+from keras.layers import Activation
 import keras
 from string import ascii_lowercase
 
@@ -57,7 +58,23 @@ def window_transform_text(text, window_size, step_size):
 
     return inputs,outputs
 
-# TODO build the required RNN model:
+# DONE build the required RNN model:
 # a single LSTM hidden layer with softmax activation, categorical_crossentropy loss
 def build_part2_RNN(window_size, num_chars):
-    pass
+    model = Sequential()
+
+    # layer 1 should be an LSTM module with 200 hidden units --> note this
+    # should have input_shape = (window_size,len(chars)) where
+    # len(chars) = number of unique characters in your cleaned text
+    model.add(LSTM(200, input_shape = (window_size, num_chars)))
+
+    # layer 2 should be a linear module, fully connected, with
+    # len(chars) hidden units --> where len(chars) = number of unique
+    # characters in your cleaned text
+    model.add(Dense(num_chars))
+
+    # layer 3 should be a softmax activation (since we are solving a
+    # multiclass classification)
+    model.add(Activation('softmax'))
+
+    return model
